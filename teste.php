@@ -1,41 +1,26 @@
-<?php 
- class Usuario{
-    private $id;
-    private $nome;
-    private $email;
-    private $senha;
-    private $pdo;
+<?php
 
-    public fuction checkUser($email){
-        #criar a variável com a consulta sql
-        $sql = "SELECT email FROM usuarios WHERE email = :e";
+require 'usuario.class.php';
 
-        #chamar o método prepare passando a consulta
-        $stmt = $this->pdo->prepare($sql);
+$usuario = new Usuario();
+$conecta = $usuario->coon();
 
-        #para cada apelido bindValue:
-        $stmt->bindVAlue(":e", $email);
+    if ($conecta){
+            $user = $usuario->checkUser("admin@gmail.com");
+            if ($user){
+                echo "P A R A B É N S ! Usuario existe no banco de dados";
+            }else{
+                echo "Não existe usuário com esse email cadastrado no banco!";
+        }
 
-        #executar o comando
-        $stmt->execute();
+            $pass = $usuario->checkPass("admin@gmail.com", "123");
+            if($user){
+                echo "<script>alert('Usuario e senha cadastrados')</script>";
+            }else{
+                "<script>alert('Não encontrei Usuario e senha cadastrados')</script>";
+            }
 
-        #SELECT
-        return $stmt->rowCount() > 0;
-    }
-
-    public function checkPass($email,$senha){
+            }else{
+                echo  "<h1> Erro ao conectar. Tente mais tarde!";
 
     }
-
-    public function coon(){
-        $dns = "mysql:dbname=banco;host+localhost";
-        $user = "root";
-        $pass = "";
-
-        try
-            $this->pdo = new PDO($dns, $user, $pass);
-            return true;
-    }catch (/Throwable $th){
-        return false;
-    }
- }
